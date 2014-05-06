@@ -9,7 +9,7 @@ A Featherweight, damn fast, and "non-compliant" promise implementation. -- use a
 
 If you want to utilize the full advantage of **promises**, I would choose [one of the many options available, that play the game by the rules](http://promisesaplus.com/implementations)
 
-If you want something designed to be tiny, and fast, with a side-effect of non-standard behavior, then feel free to hack around.
+If you want something designed to be tiny, and fast, with a side-effect of non-standard behavior, then tiny-promise might be useful.
 
 At any rate, this code walks like a promise, and talks like a promise, with occasional "quack"s in between.
 
