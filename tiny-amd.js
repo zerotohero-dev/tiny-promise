@@ -5,16 +5,14 @@ define(function() {
      * A super tiny, super fast, and "non-compliant", half-arsed, real-fast promise implementation.
      */
 
-    var exports = {};
-
-    function identity(x) {return x;}
+    function noop() {}
 
     function process(deferred, index, result) {
-        deferred.then = index === 0 ?
-            function(resolve) {(resolve || identity)(result);} :
-            function(_, reject) {(reject || identity)(result);};
+        deferred.then = index === 0 ? 
+            function(resolve) {resolve && resolve(result);}:
+            function(_, reject) {reject && reject(result);};
 
-        deferred.resolve = deferred.reject = identity;
+        deferred.resolve = deferred.reject = noop;
 
         var i = 0,
             queue = deferred.queue,
@@ -22,22 +20,22 @@ define(function() {
 
         while (item) {
             item[index](result);
-
+        
             item = queue[++i];
         }
 
-        deferred.queue.length = 0;
+        queue.length = 0;
     }
 
     function Deferred() {this.queue = [];}
 
     Deferred.prototype = {
-        then: function(onFulfilled, onRejected) {this.queue.push([onFulfilled || identity, onRejected || identity]);},
-        resolve: function(value) {process(this, 0, value );},
+        then: function(onFulfilled, onRejected) {this.queue.push([onFulfilled, onRejected]);},
+        resolve: function(value) {process(this, 0, value);},
         reject: function(reason) {process(this, 1, reason);}
     };
 
-    exports.defer = function() {return new Deferred();};
-
-    return exports;
+    return {
+        defer: function() {return new Deferred();}
+    };
 });
